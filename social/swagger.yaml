@@ -1,0 +1,82 @@
+# to keep reloading yaml files 
+# i.e for using nodemon for yaml files we have to provide extenstions in nodemon.json file  
+
+openapi: 3.0.0
+
+info:
+title: Social App 
+description: Social media app via LCO - Nishant
+version: 1.0.1
+
+servers:
+  - url: http://localhost:4000/api/v1
+    description: localhost version of our app 
+  - url: https://localhost:4000/api/v1
+    description: This is just dummy api url (it dosent work)
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+
+paths:
+  /instagram:
+    get:
+    summary: returns username, followers and follows
+      responses:
+        '200': #status code
+          description: It returns an object
+          content:
+            application/json:
+             schema:
+               type: object
+             properties: 
+               username:
+                 type: string
+               followers:
+                 type: string
+               follows:
+                 type: string  
+
+    post:
+    summary: returns username, followers and follows
+      responses:
+        '200': #status code
+          description: It returns an object
+          content:
+            application/json:
+             schema:
+               type: object
+             properties: 
+               username:
+                 type: string
+               followers:
+                 type: string
+               follows:
+                 type: string   
+  
+  
+  /{token}:
+    get:
+    summary: returns whatever present in parameter
+    parameters: 
+      -name: token
+       default: default-val
+       in: path
+       schema:
+         type: string
+      responses:
+        '200': #status code
+          description: It returns an object
+          content:
+            application/json:
+             schema:
+               type: object
+             properties: 
+               params:
+                 type: string
