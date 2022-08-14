@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Integration</title>
+
+    <style>
+        body{
+            background-color: rgb(40, 39, 39);
+            color: aliceblue;
+        }
+    </style>
+
+
+</head>
+<body>
+    
+<h1>Hey Buddy... </h1>
+
+<!-- link -->
+<!-- https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/build-integration/ -->
+
+<button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+//
+const rpbutton =document.getElementById("rzp-button1"); 
+
+// ('click', async(event=>{ }))
+rpbutton.addEventListener("click", async(event=>{
+//1)send req to server
+const response = await fetch('/orders',{
+    method:"POST",
+    headers:{
+        'Content-Type':"application/json"
+    },
+    body: JSON.stringify({amount:500})
+});
+//as it is in public dir and express knows its path we can directly use orders
+// else we have to use cors, send entire path, ...
+
+const convertResponse = await response.json();
+
+
+const {order}=convertResponse;
+
+
+var options = {
+    key: process.env.KEY_ID, // Enter the Key ID generated from the Dashboard
+    amount: 50000, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: "INR",
+    // "name": "Acme Corp",
+    // "description": "Test Transaction",
+    // "image": "https://example.com/your_logo",
+    order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    handler : function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    
+};
+
+var rzp1 = new Razorpay(options); //Razorpay instance
+
+// document.getElementById('rzp-button1').onclick = function(e){
+//     rzp1.open();
+//     e.preventDefault();
+// }
+
+rzp1.open();
+
+}))
+
+// //failure part
+// var rzp1 = new Razorpay(options);
+// rzp1.on('payment.failed', function (response){
+//         alert(response.error.code);
+//         alert(response.error.description);
+//         alert(response.error.source);
+//         alert(response.error.step);
+//         alert(response.error.reason);
+//         alert(response.error.metadata.order_id);
+//         alert(response.error.metadata.payment_id);
+// });
+
+
+</script>
+
+
+
+</body>
+</html>
